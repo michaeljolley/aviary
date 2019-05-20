@@ -2,7 +2,7 @@
     <img src="https://user-images.githubusercontent.com/1228996/58039409-4d5e1400-7af8-11e9-91bc-affc18c1a311.png">
 </p>
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors)
 
 Aviary is a soil moisture management system that runs within a Particle mesh network consisting of an Argon and n Xenons.
 
@@ -61,6 +61,6 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore -->
-<table><tr><td align="center"><a href="https://michaeljolley.com/"><img src="https://avatars2.githubusercontent.com/u/1228996?v=4" width="100px;" alt="Michael Jolley"/><br /><sub><b>Michael Jolley</b></sub></a><br /><a href="https://github.com/MichaelJolley/aviary/commits?author=MichaelJolley" title="Documentation">📖</a> <a href="#ideas-MichaelJolley" title="Ideas, Planning, & Feedback">🤔</a> <a href="#design-MichaelJolley" title="Design">🎨</a> <a href="https://github.com/MichaelJolley/aviary/commits?author=MichaelJolley" title="Code">💻</a></td><td align="center"><a href="https://drp3.me/"><img src="https://avatars0.githubusercontent.com/u/119065?v=4" width="100px;" alt="David Poindexter"/><br /><sub><b>David Poindexter</b></sub></a><br /><a href="#ideas-mtheoryx" title="Ideas, Planning, & Feedback">🤔</a></td></tr></table>
+<table><tr><td align="center"><a href="https://michaeljolley.com/"><img src="https://avatars2.githubusercontent.com/u/1228996?v=4" width="100px;" alt="Michael Jolley"/><br /><sub><b>Michael Jolley</b></sub></a><br /><a href="https://github.com/MichaelJolley/aviary/commits?author=MichaelJolley" title="Documentation">📖</a> <a href="#ideas-MichaelJolley" title="Ideas, Planning, & Feedback">🤔</a> <a href="#design-MichaelJolley" title="Design">🎨</a> <a href="https://github.com/MichaelJolley/aviary/commits?author=MichaelJolley" title="Code">💻</a></td><td align="center"><a href="http://www.carrotpantsstudios.com"><img src="https://avatars2.githubusercontent.com/u/108356?v=4" width="100px;" alt="Brandon Satrom"/><br /><sub><b>Brandon Satrom</b></sub></a><br /><a href="https://github.com/MichaelJolley/aviary/commits?author=bsatrom" title="Code">💻</a> <a href="#ideas-bsatrom" title="Ideas, Planning, & Feedback">🤔</a></td><td align="center"><a href="https://drp3.me/"><img src="https://avatars0.githubusercontent.com/u/119065?v=4" width="100px;" alt="David Poindexter"/><br /><sub><b>David Poindexter</b></sub></a><br /><a href="#ideas-mtheoryx" title="Ideas, Planning, & Feedback">🤔</a></td></tr></table>
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
