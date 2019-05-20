@@ -1,0 +1,10 @@
+{
+    "extensions.ignoreRecommendations": true,
+    "C_Cpp.default.configurationProvider": "particle.particle-vscode-core",
+    "files.associations": {
+        "*.ino": "cpp"
+    },
+    "particle.firmwareVersion": "1.2.0-beta.1",
+    "particle.targetPlatform": "xenon",
+    "particle.targetDevice": "daffy_duck"
+}
