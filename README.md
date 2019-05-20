@@ -1,4 +1,6 @@
-# Aviary
+.<p align="center">
+![](./resources/logo-name.png)
+</p>
 
 Aviary is a soil moisture management system that runs within a Particle mesh network consisting of an Argon and n Xenons.
 
