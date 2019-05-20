@@ -1,5 +1,5 @@
-.<p align="center">
-![](./resources/logo-name.png)
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/1228996/58039409-4d5e1400-7af8-11e9-91bc-affc18c1a311.png">
 </p>
 
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
@@ -10,7 +10,7 @@ Aviary is a soil moisture management system that runs within a Particle mesh net
 
 [Mother Bird](https://github.com/MichaelJolley/aviary/src/mother-bird/README.md) is designed to run on a [Particle](https://particle.io) [Argon](https://docs.particle.io/datasheets/wi-fi/argon-datasheet/) board.  It listens to baby birds on its mesh network and manages them.  It is responsible for determining when a baby bird should water its planter box.
 
-## Baby Birds
+## Baby Bird
 
 [Baby Bird](https://github.com/MichaelJolley/aviary/src/baby-bird/README.md) is designed to run on a [Particle](https://particle.io) [Xenon](https://docs.particle.io/datasheets/mesh/xenon-datasheet/) board.  It monitors soil moisture and reports to its mother bird every 2 seconds.  It also activates an attached solenoid valve if the mother bird notifies it that it is dehydrated.
 
