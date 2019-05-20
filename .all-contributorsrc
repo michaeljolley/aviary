@@ -26,6 +26,15 @@
         "code",
         "ideas"
       ]
+    },
+    {
+      "login": "mtheoryx",
+      "name": "David Poindexter",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/119065?v=4",
+      "profile": "https://drp3.me/",
+      "contributions": [
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,
