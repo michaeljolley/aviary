@@ -16,6 +16,16 @@
         "design",
         "code"
       ]
+    },
+    {
+      "login": "bsatrom",
+      "name": "Brandon Satrom",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/108356?v=4",
+      "profile": "http://www.carrotpantsstudios.com",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,
