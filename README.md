@@ -23,13 +23,12 @@ The system is designed to run on a mesh network with one [Mother Bird](https://g
 Currently, Mother Bird is simply looking for soil moisture levels below an X value.  In the future we want to add:
 
 - [ ] On Mother Bird, check weather API to determine rain chance for the next hour.  If chance is greater than X, then delay watering for up to Y hours
-- [ ] Only water between hours of 6am and 6pm
-- [ ] On Baby Birds, if Mother tells us to water but our moisture level is above X, disregard her request 
+- [ ] On Baby Birds, if Mother tells us to water but our moisture level is above X, disregard her request
 
 
 ### Why Aviary?
 
-The plan had been to use [chirp.io](https://chirp.io/) to communicate between the devices giving a nice "bird chirp" throughout my backyard as the devices monitored their moisture levels and reported back to a central device.  
+The plan had been to use [chirp.io](https://chirp.io/) to communicate between the devices giving a nice "bird chirp" throughout my backyard as the devices monitored their moisture levels and reported back to a central device.
 
 Since this would give a nice ambience to our backyard, we decided to name each device after a different bird.  Since each device will have a unique name we decided to name each after a different cartoon bird.
 
