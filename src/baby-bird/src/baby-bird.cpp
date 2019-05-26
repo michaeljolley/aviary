@@ -1,27 +1,22 @@
 #include "application.h"
-#include "Grove-Ultrasonic-Ranger.h"
+#include "Adafruit_Seesaw.h"
 #include "JsonParserGeneratorRK.h"
 
 /*
  * Project baby-bird
- * Description: Baby bird monitors soil moisture levels and notifies mother bird.  
- * It also listens for messages from mother bird to activate/deactivate its water source. 
+ * Description: Baby bird monitors soil moisture levels and notifies mother bird.
+ * It also listens for messages from mother bird to activate/deactivate its water source.
  * Author: Michael Jolley <mike@sparcapp.io>
  * Date: 2019-05-19
  */
 
-Ultrasonic ultrasonic(D2);
+Adafruit_Seesaw ss;
+int last_x = 0, last_y = 0;
+
 int led = D7;
 
 String deviceName = "";
 bool isHydrated = true;
-
-/// Sets the device name from Particle cloud so we can send in 
-/// all requests to mother-bird.  Also allows us to distinguish 
-/// whether messages received from mother-bird are meant for us.
-void nameHandler(const char *topic, const char *data) {
-    deviceName = String(data);
-}
 
 /// Processes messages from mother-bird to activate/deactivate hydration
 /// of our planter box.
@@ -41,7 +36,7 @@ void updateHydrationStatus(const char *event, const char *data) {
     // Only respond to messages directed to us directly
     if (dName == deviceName) {
 
-      // Update hydration status      
+      // Update hydration status
       if (shouldHydrate == isHydrated) {
         isHydrated = !shouldHydrate;
       }
@@ -54,21 +49,15 @@ void updateHydrationStatus(const char *event, const char *data) {
 void checkAndSendRange() {
   JsonWriterStatic<256> jsonWriter;
 
-  int moistureLevel;
-
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // Currently we're using an ultrasonic range sensor
-  // but this will be replaced with a moisture sensor
-  // in upcoming releases.  Until then the "moistureLevel"
-  // being reported is actually a distance in centimeters.
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	moistureLevel = ultrasonic.MeasureInCentimeters(); //0~400cm
+  uint16_t tempC = ss.getTemp();
+  uint16_t capread = ss.touchRead(0);
 
   {
     JsonWriterAutoObject obj(&jsonWriter);
 
     jsonWriter.insertKeyValue("deviceName", deviceName);
-    jsonWriter.insertKeyValue("moistureLevel", moistureLevel);
+    jsonWriter.insertKeyValue("temperature", tempC);
+    jsonWriter.insertKeyValue("moistureLevel", capread);
   }
 
   Mesh.publish("moisture-check", jsonWriter.getBuffer());
@@ -94,19 +83,36 @@ void solenoidControl() {
   }
 }
 
+/// Sets the device name from Particle cloud so we can send in
+/// all requests to mother-bird.  Also allows us to distinguish
+/// whether messages received from mother-bird are meant for us.
+void nameHandler(const char *topic, const char *data) {
+    deviceName = String(data);
+}
+
 // setup() runs once, when the device is first turned on.
 void setup() {
+  deviceName = Mesh.localIP().toString().c_str();
   Serial.begin(9600);
 
-  Particle.subscribe("particle/device/name", nameHandler);
-  Particle.publish("particle/device/name");
+  Particle.publish("yup", "I'm setting up", PUBLIC);
 
-  Mesh.subscribe("hydration-needed", updateHydrationStatus);
+  if (!ss.begin(0x36))
+  {
+    while (1)
+      ;
+  }
+
+
+  if (Particle.connected) {
+    Particle.subscribe("particle/device/name", nameHandler);
+    Particle.publish("particle/device/name");
+  }
 }
 
 // loop() runs over and over again, as quickly as it can execute.
 void loop() {
-  
+
   solenoidControl();
 
   checkAndSendRange();
