@@ -30,12 +30,18 @@ bool insideWateringWindow(String deviceName, int moistureLevel) {
 
   if (settings.endHour > settings.startHour) {
     if (currentHour < settings.startHour || currentHour > settings.endHour) {
-        response = false;
+      response = false;
+    }
+    else {
+      response = true;
     }
   }
   else {
     if (currentHour < settings.startHour && currentHour > settings.endHour) {
       response = false;
+    }
+    else {
+      response = true;
     }
   }
 
@@ -62,7 +68,7 @@ bool shouldHydrate(String deviceName, int moistureLevel) {
     // in upcoming releases.  Until then the "moistureLevel"
     // being reported is actually a distance in centimeters.
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    if (moistureLevel <= 12) {
+    if (moistureLevel <= 400) {
       hydrationNeeded = true;
     }
 
@@ -106,6 +112,8 @@ void reviewMoistureLevel(const char *event, const char *data) {
       jsonWriter.insertKeyValue("shouldHydrate", shouldWeHydrate);
     }
 
+    Particle.publish("hydration-needed", deviceName + " (" + moistureLevel + "): should hydrate(" + shouldWeHydrate + ")");
+
     Mesh.publish("hydration-needed", jsonWriter.getBuffer());
   }
 }
@@ -135,6 +143,9 @@ int updateSettings(String data) {
       MotherBirdSettings newSettings = {0, startHour, endHour};
       settings = newSettings;
       saveDefaultSettings();
+
+      Particle.publish("settings-updated", data, PUBLIC);
+
     }
   }
   return 1;
