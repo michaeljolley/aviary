@@ -4,8 +4,8 @@
 
 /*
  * Project baby-bird
- * Description: Baby bird monitors soil moisture levels and notifies mother bird.  
- * It also listens for messages from mother bird to activate/deactivate its water source. 
+ * Description: Baby bird monitors soil moisture levels and notifies mother bird.
+ * It also listens for messages from mother bird to activate/deactivate its water source.
  * Author: Michael Jolley <mike@sparcapp.io>
  * Date: 2019-05-19
  */
@@ -15,13 +15,6 @@ int led = D7;
 
 String deviceName = "";
 bool isHydrated = true;
-
-/// Sets the device name from Particle cloud so we can send in 
-/// all requests to mother-bird.  Also allows us to distinguish 
-/// whether messages received from mother-bird are meant for us.
-void nameHandler(const char *topic, const char *data) {
-    deviceName = String(data);
-}
 
 /// Processes messages from mother-bird to activate/deactivate hydration
 /// of our planter box.
@@ -41,7 +34,7 @@ void updateHydrationStatus(const char *event, const char *data) {
     // Only respond to messages directed to us directly
     if (dName == deviceName) {
 
-      // Update hydration status      
+      // Update hydration status
       if (shouldHydrate == isHydrated) {
         isHydrated = !shouldHydrate;
       }
@@ -94,19 +87,28 @@ void solenoidControl() {
   }
 }
 
+/// Sets the device name from Particle cloud so we can send in
+/// all requests to mother-bird.  Also allows us to distinguish
+/// whether messages received from mother-bird are meant for us.
+void nameHandler(const char *topic, const char *data) {
+    deviceName = String(data);
+}
+
 // setup() runs once, when the device is first turned on.
 void setup() {
+  deviceName = Mesh.localIP().toString().c_str();
   Serial.begin(9600);
 
-  Particle.subscribe("particle/device/name", nameHandler);
-  Particle.publish("particle/device/name");
 
-  Mesh.subscribe("hydration-needed", updateHydrationStatus);
+  if (Particle.connected) {
+    Particle.subscribe("particle/device/name", nameHandler);
+    Particle.publish("particle/device/name");
+  }
 }
 
 // loop() runs over and over again, as quickly as it can execute.
 void loop() {
-  
+
   solenoidControl();
 
   checkAndSendRange();
