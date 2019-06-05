@@ -1,3 +1,4 @@
+#include <ctime>
 #include "application.h"
 #include "JsonParserGeneratorRK.h"
 
@@ -15,11 +16,26 @@ struct MotherBirdSettings {
   int endHour;
 };
 
+struct DailyWeatherForecast {
+  int date;
+  //HourlyWeatherForecast[] forecasts;
+};
+
+struct HourlyWeatherForecast {
+  int hour;
+  float precipIntensity;
+  float precipProbability;
+  float temperatureC;
+  float cloudCover;
+};
+
 int defaultStartHour = 11; // 11AM UTC = 6AM CDT
 int defaultEndHour = 23; // 11PM UTC = 6PM CDT
 
 MotherBirdSettings settings;
 int settingsEEPROMAddress = 0;
+
+DailyWeatherForecast forecast;
 
 /// Calculates whether the current hour is within our
 /// allowed window for watering.
@@ -48,9 +64,47 @@ bool insideWateringWindow(String deviceName, int moistureLevel) {
   if (!response) {
     if (Particle.connected) {
       String message = deviceName + " reported: " + String(moistureLevel) + " at " + String(currentHour) + ". (Outside hours of " + String(settings.startHour) + " and " + String(settings.endHour) + ")";
-      Particle.publish("hydration-prevented", message, PUBLIC);
+      Particle.publish("hydration-prevented", message, PRIVATE);
     }
   }
+
+  return response;
+}
+
+// Consider the rain forecast for today in determining whether
+// to water the plants.
+bool reviewWeatherForecast() {
+
+  // If we don't have a forecast and don't have a connection
+  // to particle we can't get the forecast, so we'll assume
+  // it's okay to water.
+  if (forecast.date == 0 && !Particle.connected) {
+    return true;
+  }
+
+  int currentDay = Time.day();
+
+  // Either we have no forecast or it isn't for today
+  if (forecast.date == 0 ||
+      forecast.date != currentDay) {
+
+    // If we have access to Particle, send request
+    // to update weather forecast for today
+    if (Particle.connected) {
+
+      String data = "{ \"day\":" + String(Time.now()) + " }";
+
+      Particle.publish("weather-forecast", data, PRIVATE);
+      delay(30000);
+    }
+  }
+
+  bool response = false;
+
+  // compare forecast info
+  //int currentHour = Time.hour();
+
+
 
   return response;
 }
@@ -72,13 +126,11 @@ bool shouldHydrate(String deviceName, int moistureLevel) {
       hydrationNeeded = true;
     }
 
-    if (hydrationNeeded) {
-      // Check to ensure we're within our approved watering hours
-      hydrationNeeded = insideWateringWindow(deviceName, moistureLevel);
+    // Check to ensure we're within our approved watering hours
+    hydrationNeeded = hydrationNeeded && insideWateringWindow(deviceName, moistureLevel);
 
-      // Check upcoming weather forecast for rain
-
-    }
+    // Check upcoming weather forecast for rain
+    hydrationNeeded = hydrationNeeded && reviewWeatherForecast();
 
     return hydrationNeeded;
 }
@@ -112,7 +164,9 @@ void reviewMoistureLevel(const char *event, const char *data) {
       jsonWriter.insertKeyValue("shouldHydrate", shouldWeHydrate);
     }
 
-    Particle.publish("hydration-needed", deviceName + " (" + moistureLevel + "): should hydrate(" + shouldWeHydrate + ")");
+    if (Particle.connected) {
+      Particle.publish("hydration-needed", deviceName + " (" + moistureLevel + "): should hydrate(" + shouldWeHydrate + ")", PRIVATE);
+    }
 
     Mesh.publish("hydration-needed", jsonWriter.getBuffer());
   }
@@ -144,12 +198,21 @@ int updateSettings(String data) {
       settings = newSettings;
       saveDefaultSettings();
 
-      Particle.publish("settings-updated", data, PUBLIC);
-
+      if (Particle.connected) {
+        Particle.publish("settings-updated", data, PRIVATE);
+      }
     }
   }
   return 1;
 }
+
+/// Updates the forecast property so we can determine
+/// whether to water based on rain forecast
+void updateForecast(const char *event, const char *data) {
+
+
+}
+
 
 /// Try to read and set settings from EEPROM.  If not available
 /// use default.
@@ -170,6 +233,7 @@ void setup() {
 
   if (Particle.connected) {
     Particle.function("updateSettings", updateSettings);
+    Particle.subscribe("hook-response/weather-forecast", updateForecast, MY_DEVICES);
   }
 
   Mesh.subscribe("moisture-check", reviewMoistureLevel);
