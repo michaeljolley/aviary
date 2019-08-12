@@ -51,6 +51,6 @@
 			"cctype": "cpp",
 			"string": "cpp"
 		},
-		"cortex-debug.openocdPath": "C:\\Users\\mike\\.particle\\toolchains\\openocd\\0.10.0-particle.1\\bin\\openocd.exe"
+		"cortex-debug.openocdPath": "${command:particle.getDebuggerOpenocdPath}"
 	}
 }

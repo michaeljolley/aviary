@@ -13,7 +13,7 @@
 Adafruit_Seesaw ss;
 int last_x = 0, last_y = 0;
 
-int led = D7;
+int solenoid = D2;
 
 String deviceName = "";
 bool isHydrated = true;
@@ -70,16 +70,12 @@ void solenoidControl() {
   // If we're in a hydrated state, ensure the solenoid valve
   // is closed and turn off the LED
   if (isHydrated) {
-
-    digitalWrite(led, LOW);
-
+    digitalWrite(solenoid, LOW);
   }
   // If we're not in a hydrated state, ensure the solenoid valve
   // is open and turn on the LED to denote we are watering
   else {
-
-    digitalWrite(led, HIGH);
-
+    digitalWrite(solenoid, HIGH);
   }
 }
 
@@ -94,15 +90,12 @@ void nameHandler(const char *topic, const char *data) {
 void setup() {
   deviceName = Mesh.localIP().toString().c_str();
   Serial.begin(9600);
-
-  Particle.publish("yup", "I'm setting up", PUBLIC);
+  pinMode(solenoid, OUTPUT);
 
   if (!ss.begin(0x36))
   {
-    while (1)
-      ;
+    while (1);
   }
-
 
   if (Particle.connected) {
     Particle.subscribe("particle/device/name", nameHandler);

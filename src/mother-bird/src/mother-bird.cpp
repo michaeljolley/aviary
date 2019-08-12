@@ -25,15 +25,16 @@ struct HourlyWeatherForecast {
   int hour;
   float precipIntensity;
   float precipProbability;
-  float temperatureC;
+  float temperatureF;
   float cloudCover;
 };
 
-int defaultStartHour = 11; // 11AM UTC = 6AM CDT
-int defaultEndHour = 23; // 11PM UTC = 6PM CDT
+int defaultStartHour = 11;  // 11AM UTC = 6AM CDT
+int defaultEndHour = 23;    // 11PM UTC = 6PM CDT
 
 MotherBirdSettings settings;
 int settingsEEPROMAddress = 0;
+int forecastEEPROMAddress = 1;
 
 DailyWeatherForecast forecast;
 
@@ -209,6 +210,34 @@ int updateSettings(String data) {
 /// Updates the forecast property so we can determine
 /// whether to water based on rain forecast
 void updateForecast(const char *event, const char *data) {
+  EEPROM.get(forecastEEPROMAddress, forecast);
+
+  JsonParser jsonParser;
+	jsonParser.addString(data);
+
+  if (jsonParser.parse()) {
+
+    int startHour = -1;
+    int endHour = 25;
+
+    jsonParser.
+
+    jsonParser.getOuterValueByKey("startHour", startHour);
+    jsonParser.getOuterValueByKey("endHour", endHour);
+
+    if (startHour >= 0 && startHour <= 24
+        && endHour >= 0 && endHour <= 24) {
+
+      MotherBirdSettings newSettings = {0, startHour, endHour};
+      settings = newSettings;
+      saveDefaultSettings();
+
+      if (Particle.connected) {
+        Particle.publish("settings-updated", data, PRIVATE);
+      }
+    }
+  }
+  return 1;
 
 
 }
